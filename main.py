@@ -5,9 +5,7 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
-from time import strftime
 
-time=strftime('%Y-%m-%d')
 today = datetime.now()
 start_date = os.environ['START_DATE']
 city = os.environ['CITY']
@@ -35,6 +33,10 @@ def get_birthday():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
   return delta.days
 
+def get_time():
+  delta = datetime.strptime(start_date, "%Y-%m-%d")
+  return delta.days
+
 def get_words():
   words = requests.get("https://api.shadiao.pro/chp")
   if words.status_code != 200:
@@ -49,7 +51,7 @@ client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
 wea, temperature, highest, lowest = get_weather()
-data = {"time":{"value":time,"color":get_random_color()},"weather":{"value":wea,"color":get_random_color()},"temperature":{"value":temperature,"color":get_random_color()},"love_days":{"value":get_count(),"color":get_random_color()},"birthday_left":{"value":get_birthday(),"color":get_random_color()},"words":{"value":get_words(),"color":get_random_color()},"highest": {"value":highest,"color":get_random_color()},"lowest":{"value":lowest, "color":get_random_color()}}
+data = {"time":{"value":get_time(),"color":get_random_color()},"weather":{"value":wea,"color":get_random_color()},"temperature":{"value":temperature,"color":get_random_color()},"love_days":{"value":get_count(),"color":get_random_color()},"birthday_left":{"value":get_birthday(),"color":get_random_color()},"words":{"value":get_words(),"color":get_random_color()},"highest": {"value":highest,"color":get_random_color()},"lowest":{"value":lowest, "color":get_random_color()}}
 count = 0
 
 
