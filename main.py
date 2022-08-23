@@ -5,8 +5,6 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
-from time import strftime
-print(strftime('%Y-%m-%d')
 
 
 today = datetime.now()
