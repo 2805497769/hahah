@@ -35,7 +35,7 @@ def get_birthday():
 
 def get_time():
   delta = today
-  return delta.days
+  return delta
 
 def get_words():
   words = requests.get("https://api.shadiao.pro/chp")
