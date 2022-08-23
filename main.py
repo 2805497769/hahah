@@ -34,7 +34,7 @@ def get_birthday():
   return delta.days
 
 def get_time():
-  delta = datetime.strptime(start_date, "%Y-%m-%d")
+  delta = today
   return delta.days
 
 def get_words():
