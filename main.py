@@ -14,24 +14,25 @@ birthday = os.environ['BIRTHDAY']
 app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
 
-user_ids = os.environ["USER_ID"].split("\n")
+user_id = os.environ["USER_ID"]
 template_id = os.environ["TEMPLATE_ID"]
-
 
 
 def get_weather():
   url = "https://restapi.amap.com/v3/weather/weatherInfo?key=4d3699828b8ef8870e9836a122778e8b&city=620600"
   res = requests.get(url).json()
   weather = res['lives'][0]
-  return weather['weather'],weather['temperature']
+  return weather['weather'], weather['temp']
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
   return delta.days
 
 def get_birthday():
-  delta = today - datetime.strptime(start_date, "%Y-%m-%d")
-  return delta.days
+  next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
+  if next < datetime.now():
+    next = next.replace(year=next.year + 1)
+  return (next - today).days
 
 def get_words():
   words = requests.get("https://api.shadiao.pro/chp")
@@ -46,13 +47,7 @@ def get_random_color():
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
-wea,temperature= get_weather()
-data = {"date":{"value":date,"color":get_random_color()},"weather":{"value":wea,"color":get_random_color()},"temperature":{"value":temperature,"color":get_random_color()},"love_days":{"value":get_count(),"color":get_random_color()},"birthday_left":{"value":get_birthday(),"color":get_random_color()},"words":{"value":get_words(),"color":get_random_color()}}
-count = 0
-
-
-for user_id in user_ids:
-  res = wm.send_template(user_id, template_id, data)
-  count+=1
-
-print("发送了" + str(count) + "条消息")
+wea, temperature = get_weather()
+data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+res = wm.send_template(user_id, template_id, data)
+print(res)
