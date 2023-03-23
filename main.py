@@ -22,7 +22,7 @@ def get_weather():
   url = "https://restapi.amap.com/v3/weather/weatherInfo?key=4d3699828b8ef8870e9836a122778e8b&city=620600"
   res = requests.get(url).json()
   weather = res['lives'][0]
-  return weather['weather'], weather['temperature']
+  return weather['weather'], weather['temperature'],weather['reporttime']
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
@@ -47,7 +47,7 @@ def get_random_color():
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
-wea, temperature = get_weather()
-data = {"weather":{"value":wea},"date":{"value":today},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+wea, reporttime,temperature = get_weather()
+data = {"weather":{"value":wea},"reporttime":{"value":reporttime},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
 res = wm.send_template(user_id, template_id, data)
 print(res)
